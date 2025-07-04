@@ -8,12 +8,13 @@ public partial class Program
 {
     private static void Main(string[] args)
     {
-        var builder = Microsoft.AspNetCore.Builder.WebApplication.CreateBuilder(args);
+        var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddDbContext<AppDbContext>(options =>
-            options.UseMySql(
+            options.UseSqlite(
                 builder.Configuration.GetConnectionString("DefaultConnection"),
-                new MySqlServerVersion(new Version(8, 0, 34))
+                sqliteOptions =>
+                    sqliteOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery) // Use split query for better performance
             )
         );
 
